@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buffalo Farming Guide - Complete Information System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #16a34a 0%, #2563eb 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            color: #16a34a;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            background: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .tab.active {
+            background: #16a34a;
+            color: white;
+        }
+
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            color: #1f2937;
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+        }
+
+        .card .meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-green {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-blue {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-red {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-yellow {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-purple {
+            background: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .detail-view {
+            margin-top: 2rem;
+        }
+
+        .detail-view h2 {
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+
+        .detail-section h4 {
+            color: #374151;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .detail-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .detail-section li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .detail-section li:last-child {
+            border-bottom: none;
+        }
+
+        .back-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-btn:hover {
+            background: #2563eb;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #16a34a;
+        }
+
+        .info-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .info-box h4 {
+            color: #92400e;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box p {
+            color: #78350f;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background: #1f2937;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab {
+                width: 100%;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🐃 Buffalo Farming Guide</h1>
+        <p>Complete Information System for Aspiring Dairy Farmers</p>
+    </div>
+
+    <div class="container">
+        <!-- Statistics -->
+        <div id="stats" class="stats-grid">
+            <div class="stat-card">
+                <h3 id="totalBreeds">-</h3>
+                <p>Buffalo Breeds</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalDiseases">-</h3>
+                <p>Disease Information</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalSchemes">-</h3>
+                <p>Govt Schemes</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="activeListings">-</h3>
+                <p>Market Listings</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="successStories">-</h3>
+                <p>Success Stories</p>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('breeds')">🐃 Breeds</button>
+            <button class="tab" onclick="showTab('diseases')">🏥 Diseases</button>
+            <button class="tab" onclick="showTab('feeding')">🌾 Feeding</button>
+            <button class="tab" onclick="showTab('schemes')">🏛️ Govt Schemes</button>
+            <button class="tab" onclick="showTab('success')">⭐ Success Stories</button>
+            <button class="tab" onclick="showTab('market')">🛒 Marketplace</button>
+        </div>
+
+        <!-- Content Area -->
+        <div id="content" class="content">
+            <div class="loading">Loading...</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>Buffalo Farming Guide</strong> - Your Complete Resource for Profitable Dairy Farming</p>
+        <p style="margin-top: 0.5rem; opacity: 0.8;">© 2024 Buffalo Farming Information System</p>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+        let currentTab = 'breeds';
+        let currentData = {};
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStats();
+            showTab('breeds');
+        });
+
+        // Load Statistics
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/stats`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('totalBreeds').textContent = result.data.totalBreeds;
+                    document.getElementById('totalDiseases').textContent = result.data.totalDiseases;
+                    document.getElementById('totalSchemes').textContent = result.data.totalSchemes;
+                    document.getElementById('activeListings').textContent = result.data.activeListings;
+                    document.getElementById('successStories').textContent = result.data.successStories;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Show Tab
+        function showTab(tab) {
+            currentTab = tab;
+            
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Load content
+            switch(tab) {
+                case 'breeds':
+                    loadBreeds();
+                    break;
+                case 'diseases':
+                    loadDiseases();
+                    break;
+                case 'feeding':
+                    loadFeeding();
+                    break;
+                case 'schemes':
+                    loadSchemes();
+                    break;
+                case 'success':
+                    loadSuccessStories();
+                    break;
+                case 'market':
+                    loadMarketplace();
+                    break;
+            }
+        }
+
+        // Load Breeds
+        async function loadBreeds() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading">Loading breeds...</div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/breeds`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentData.breeds = result.data;
+                    displayBreeds(result.data);
+                }
+            } catch (error) {
+                content.innerHTML = '<div class="loading">Error loading breeds</div>';
+                console.error('Error:', error);
+            }
+        }
+
+        function displayBreeds(breeds, searchValue = '') {
+            const content = document.getElementById('content');
+            
+            let html = `
+                <h2>Buffalo Breeds of India</h2>
+                <input type="text" id="breedSearchBox" class="search-box" placeholder="Search breeds by name or state..." onkeyup="searchBreeds(event)" value="${searchValue}">
+                <div class="info-box">
+                    <h4>💡 Choosing Guide</h4>
+                    <p>Murrah is best for milk yield. Mehsana for hot climates. Bhadawari for ghee production.</p>
+                </div>
+                <div class="grid">
+            `;
+            
+            breeds.forEach(breed => {
+                html += `
+                    <div class="card" onclick="showBreedDetail(${breed.id})">
+                        <h3>${breed.image || '🐃'} ${breed.name}</h3>
+                        <div class="meta">
+                            <span class="badge badge-blue">📍 ${breed.state}</span>
+                            <span class="badge badge-green">${breed.price}</span>
+                        </div>
+                        <p><strong>Milk Yield:</strong> ${breed.milkYield}</p>
+                        <p><strong>Fat Content:</strong> ${breed.fatContent}</p>
+                        <p><strong>Best For:</strong> ${breed.bestFor}</p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            content.innerHTML = html;
+            
+            // Restore focus to search box
+            const searchBox = document.getElementById('breedSearchBox');
+            if (searchValue && searchBox) {
+                searchBox.focus();
+                // Set cursor to end of text
+                searchBox.setSelectionRange(searchValue.length, searchValue.length);
+            }
+        }
+
+        function searchBreeds(event) {
+            const query = event.target.value;
+            const queryLower = query.toLowerCase();
+            const filtered = currentData.breeds.filter(breed => 
+                breed.name.toLowerCase().includes(queryLower) ||
+                breed.state.toLowerCase().includes(queryLower)
+            );
+            displayBreeds(filtered, query);
+        }
+
+        function showBreedDetail(id) {
+            const breed = currentData.breeds.find(b => b.id === id);
+            const content = document.getElementById('content');
+            
+            content.innerHTML = `
+                <button class="back-btn" onclick="loadBreeds()">← Back to Breeds</button>
+                <div class="detail-view">
+                    <h2>${breed.image || '🐃'} ${breed.name}</h2>
+                    <div class="meta" style="margin-bottom: 1.5rem;">
+                        <span class="badge badge-blue">📍 ${breed.state}</span>
+                        <span class="badge badge-green">${breed.price}</span>
+                        <span class="badge badge-purple">${breed.nickname}</span>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h4>📊 Production Details</h4>
+                        <ul>
+                            <li><strong>Milk Yield:</strong> ${breed.milkYield}</li>
+                            <li><strong>Fat Content:</strong> ${breed.fatContent}</li>
+                            <li><strong>Weight:</strong> ${breed.weight}</li>
+                            <li><strong>Color:</strong> ${breed.color}</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h4>🎯 Key Features</h4>
+                        <p>${breed.features}</p>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h4>✅ Best For</h4>
+                        <p>${breed.bestFor}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load Diseases
+        async function loadDiseases() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading">Loading diseases...</div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/diseases`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentData.diseases = result.data;
+                    displayDiseases(result.data);
+                }
+            } catch (error) {
+                content.innerHTML = '<div class="loading">Error loading diseases</div>';
+                console.error('Error:', error);
+            }
+        }
+
+        function displayDiseases(diseases, searchValue = '') {
+            const content = document.getElementById('content');
+            
+            let html = `
+                <h2>Common Diseases & Treatment</h2>
+                <input type="text" id="diseaseSearchBox" class="search-box" placeholder="Search diseases by name..." onkeyup="searchDiseases(event)" value="${searchValue}">
+                <div class="info-box">
+                    <h4>⚠️ Prevention is Better Than Cure!</h4>
+                    <p>Regular vaccination costs ₹500-1,000/year vs treatment costs ₹3,000-10,000 per disease.</p>
+                </div>
+                <div class="grid">
+            `;
+            
+            diseases.forEach(disease => {
+                const severityBadge = disease.severity === 'Very High' ? 'badge-red' : 
+                                     disease.severity === 'High' ? 'badge-yellow' : 'badge-blue';
+                
+                html += `
+                    <div class="card" onclick="showDiseaseDetail(${disease.id})">
+                        <h3>${disease.name}</h3>
+                        <div class="meta">
+                            <span class="badge badge-purple">${disease.type}</span>
+                            <span class="badge ${severityBadge}">${disease.severity}</span>
+                        </div>
+                        <p><strong>Treatment Cost:</strong> ${disease.cost}</p>
+                        <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
+                            ${disease.symptoms.slice(0, 2).join(', ')}...
+                        </p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            content.innerHTML = html;
+            
+            // Restore focus to search box
+            const searchBox = document.getElementById('diseaseSearchBox');
+            if (searchValue && searchBox) {
+                searchBox.focus();
+                // Set cursor to end of text
+                searchBox.setSelectionRange(searchValue.length, searchValue.length);
+            }
+        }
+
+        function searchDiseases(event) {
+            const query = event.target.value;
+            const queryLower = query.toLowerCase();
+            const filtered = currentData.diseases.filter(disease => 
+                disease.name.toLowerCase().includes(queryLower)
+            );
+            displayDiseases(filtered, query);
+        }
+
+        function showDiseaseDetail(id) {
+            const disease = currentData.diseases.find(d => d.id === id);
+            const content = document.getElementById('content');
+            
+            content.innerHTML = `
+                <button class="back-btn" onclick="loadDiseases()">← Back to Diseases</button>
+                <div class="detail-view">
+                    <h2>${disease.name}</h2>
+                    <div class="meta" style="margin-bottom: 1.5rem;">
+                        <span class="badge badge-purple">${disease.type}</span>
+                        <span class="badge badge-red">${disease.severity}</span>
+                        <span class="badge badge-green">${disease.cost}</span>
+                    </div>
+                    
+                    <div class="detail-section" style="background: #fee2e2;">
+                        <h4>🚨 Symptoms</h4>
+                        <ul>
+                            ${disease.symptoms.map(s => `<li>${s}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-section" style="background: #dcfce7;">
+                        <h4>💊 Treatment</h4>
+                        <ul>
+                            ${disease.treatment.map(t => `<li>${t}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-section" style="background: #dbeafe;">
+                        <h4>✅ Prevention</h4>
+                        <ul>
+                            ${disease.prevention.map(p => `<li>${p}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="detail-section" style="background: #f3e8ff;">
+                        <h4>💉 Medicines Used</h4>
+                        <div class="meta">
+                            ${disease.medicines.map(m => `<span class="badge badge-purple">${m}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load Feeding
+        async function loadFeeding() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading">Loading feeding guide...</div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/feeding`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayFeeding(result.data);
+                }
+            } catch (error) {
+                content.innerHTML = '<div class="loading">Error loading feeding guide</div>';
+                console.error('Error:', error);
+            }
+        }
+
+        function displayFeeding(data) {
+            const content = document.getElementById('content');
+            
+            let html = `
+                <h2>Feeding & Nutrition Guide</h2>
+                <div class="info-box" style="background: linear-gradient(135deg, #16a34a 0%, #2563eb 100%); border: none;">
+                    <h4 style="color: white;">💰 Daily Feeding Cost: ₹300/buffalo</h4>
+                    <p style="color: white; opacity: 0.95;">For 15 liters milk production | Monthly: ₹9,000 per buffalo</p>
+                </div>
+                
+                <div class="detail-section" style="background: #dbeafe; margin-bottom: 1.5rem;">
+                    <h4>💧 Water Requirements</h4>
+                    <p>${data.waterRequirements}</p>
+                </div>
+                
+                <div class="grid">
+            `;
+            
+            data.categories.forEach(cat => {
+                html += `
+                    <div class="detail-section">
+                        <h4>${cat.title}</h4>
+                        <ul>
+                            ${cat.items.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                        <div style="margin-top: 1rem; padding: 0.75rem; background: #dcfce7; border-radius: 6px;">
+                            <p><strong>Quantity:</strong> ${cat.quantity}</p>
+                            ${cat.cost ? `<p><strong>Cost:</strong> ${cat.cost}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                </div>
+                <div class="detail-section" style="margin-top: 1.5rem;">
+                    <h4>📅 Daily Feeding Schedule</h4>
+                    <ul>
+                        ${data.feedingSchedule.map((schedule, idx) => 
+                            `<li><strong>${idx + 1}.</strong> ${schedule}</li>`
+                        ).join('')}
+                    </ul>
+                </div>
+            `;
+            
+            content.innerHTML = html;
+        }
+
+        // Load Government Schemes
+        async function loadSchemes() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading">Loading government schemes...</div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/schemes`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    displaySchemes(result.data);
+                }
+            } catch (error) {
+                content.innerHTML = '<div class="loading">Error loading schemes</div>';
+                console.error('Error:', error);
+            }
+        }
+
+        function displaySchemes(schemes) {
+            const content = document.getElementById('content');
+            
+            let html = `
+                <h2>Government Schemes & Subsidies</h2>
+                <div class="info-box">
+                    <h4>💰 Financial Support Available</h4>
+                    <p>Government provides 25-50% subsidy on buffalo farming. Loans available with 4% interest rate.</p>
+                </div>
+                <div class="grid">
+            `;
+            
+            schemes.forEach(scheme => {
+                html += `
+                    <div class="card">
+                        <h3>🏛️ ${scheme.name}</h3>
+                        <div class="detail-section" style="margin-top: 1rem;">
+                            <p><strong>Benefit:</strong> ${scheme.benefit}</p>
+                            <p style="margin-top: 0.5rem;"><strong>Subsidy:</strong> 
+                                <span class="badge badge-green">${scheme.subsidy}</span>
+                            </p>
+                            <p style="margin-top: 0.5rem;"><strong>Eligibility:</strong> ${scheme.eligibility}</p>
+                            <p style="margin-top: 0.5rem;"><strong>Apply:</strong> ${scheme.howToApply}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            content.innerHTML = html;
+        }
+
+        // Load Success Stories
+        async function loadSuccessStories() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading">Loading success stories...</div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/success-stories`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    displaySuccessStories(result.data);
+                }
+            } catch (error) {
+                content.innerHTML = '<div class="loading">Error loading success stories</div>';
+                console.error('Error:', error);
+            }
+        }
+
+        function displaySuccessStories(stories) {
+            const content = document.getElementById('content');
+            
+            let html = `
+                <h2>Real Success Stories from Farmers</h2>
+                <div class="info-box">
+                    <h4>⭐ Learn from Those Who Succeeded</h4>
+                    <p>These are real farmers earning ₹90K-₹2.8L per month from buffalo farming.</p>
+                </div>
+            `;
+            
+            stories.forEach(story => {
+                html += `
+                    <div class="detail-section" style="background: linear-gradient(135deg, #dcfce7 0%, #dbeafe 100%); margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <div>
+                                <h3>👨‍🌾 ${story.name}</h3>
+                                <p style="color: #666;">📍 ${story.location}</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <p style="color: #666; font-size: 0.9rem;">Monthly Income</p>
+                                <h3 style="color: #16a34a; margin-top: 0.25rem;">${story.monthlyIncome}</h3>
+                            </div>
+                        </div>
+                        <div class="meta" style="margin-bottom: 1rem;">
+                            <span class="badge badge-blue">Scale: ${story.scale}</span>
+                            <span class="badge badge-green">Investment: ${story.investment}</span>
+                        </div>
+                        <div style="background: white; padding: 1rem; border-radius: 6px;">
+                            <p><strong>Success Story:</strong> ${story.story}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            content.innerHTML = html;
+        }
+
+        // Load Marketplace
+        async function loadMarketplace() {
+            const content = document.getElementById('content');
+            content.innerHTML = '<div class="loading">Loading marketplace...</div>';
+            
+            try {
+                const response = await fetch(`${API_URL}/marketplace`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayMarketplace(result.data);
+                }
+            } catch (error) {
+                content.innerHTML = '<div class="loading">Error loading marketplace</div>';
+                console.error('Error:', error);
+            }
+        }
+
+        function displayMarketplace(listings) {
+            const content = document.getElementById('content');
+            
+            let html = `
+                <h2>Buffalo Marketplace</h2>
+                <div class="info-box">
+                    <h4>💡 Buying Tips</h4>
+                    <p>Check health certificate, milk production records, and vaccination history. Buy from verified sellers only.</p>
+                </div>
+                <div class="grid">
+            `;
+            
+            listings.forEach(listing => {
+                const typeBadge = listing.type === 'sell' ? 'badge-green' : 'badge-blue';
+                
+                html += `
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <div>
+                                <h3>🐃 ${listing.breed}</h3>
+                                <span class="badge ${typeBadge}">${listing.type === 'sell' ? 'For Sale' : 'Wanted'}</span>
+                                ${listing.verified ? '<span class="badge badge-blue">✓ Verified</span>' : ''}
+                            </div>
+                            <div style="text-align: right;">
+                                <h3 style="color: #16a34a;">${listing.price || listing.budget || '-'}</h3>
+                            </div>
+                        </div>
+                        
+                        ${listing.age ? `<p><strong>Age:</strong> ${listing.age}</p>` : ''}
+                        ${listing.milkYield ? `<p><strong>Milk Yield:</strong> ${listing.milkYield}</p>` : ''}
+                        ${listing.requirement ? `<p><strong>Requirement:</strong> ${listing.requirement}</p>` : ''}
+                        <p><strong>Location:</strong> 📍 ${listing.location}</p>
+                        <p style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e5e7eb;">
+                            <strong>Contact:</strong> ${listing.contact}
+                        </p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            content.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
