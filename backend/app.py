@@ -27,7 +27,7 @@ db = SQLAlchemy(app)
 CORS(app)  # Enable CORS for frontend
 
 # Database Configuration
-DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres:password@localhost:5432/buffalo_farming')
+DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres:user@localhost:5432/buffalo_farming')
 # Fix for Render/Heroku: postgres:// to postgresql://
 if DATABASE_URL.startswith('postgres://'):
     DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
@@ -37,7 +37,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-change-in-production')
 
 # Initialize Database
-db = SQLAlchemy(app)
+    db.init_app(app)   # ✅ attach to app here
+
+#db = SQLAlchemy(app)
 
 
 # ===========================
