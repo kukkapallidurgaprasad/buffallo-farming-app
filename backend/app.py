@@ -11,7 +11,29 @@ from datetime import datetime
 import os
 
 # Initialize Flask app
+# Initialize Flask app
 app = Flask(__name__)
+
+# Get database URL from environment
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Fix postgres:// issue (Render fix)
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# If not provided, use SQLite locally
+if not DATABASE_URL:
+    DATABASE_URL = "sqlite:///buffalo.db"
+
+# Configure app
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "your-secret-key-change-in-production")
+
+# Initialize extensions (ONLY ONCE)
+db = SQLAlchemy(app)
+CORS(app)
+"""app = Flask(__name__)
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 if DATABASE_URL:
@@ -39,7 +61,8 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-change-in-pr
 # Initialize Database
 db.init_app(app)   # ✅ attach to app here
 
-#db = SQLAlchemy(app)
+#db = SQLAlchemy(app)"""
+
 
 
 # ===========================
